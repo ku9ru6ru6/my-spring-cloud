@@ -1,0 +1,9 @@
+server:
+  port: 4444
+spring:
+  application:
+    name: fegin-service
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
