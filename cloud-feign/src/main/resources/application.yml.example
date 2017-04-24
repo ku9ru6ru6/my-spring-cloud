@@ -1,9 +1,42 @@
+# 服务端口
 server:
-  port: 4444
+  port: 9002
+
+# spring配置
 spring:
+  session:
+    store-type: redis
+    redis:
+      namespace: chat-session
+  output:
+    ansi:
+      enabled: detect
   application:
-    name: fegin-service
+    name: feign-server
+
+# 日志配置
+logging:
+  level: warn
+
+
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:1111/eureka/
+      defaultZone: http://localhost:9000/eureka/
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          semaphore:
+            timeoutInMilliseconds: 9000
+
+# 开启压缩
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true

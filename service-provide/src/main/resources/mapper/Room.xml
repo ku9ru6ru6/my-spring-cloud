@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.cai.model.Room">
+
+    <resultMap id="RoomMap" type="Room">
+        <id column="id" property="id" javaType="java.lang.Long"/>
+        <result column="user_id" property="userId" javaType="java.lang.Long"/>
+        <result column="name" property="name" javaType="java.lang.String"/>
+        <result column="intro" property="intro" javaType="java.lang.String"/>
+        <result column="max_number" property="maxNumber" javaType="java.lang.Integer"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date"/>
+    </resultMap>
+
+    <sql id="tb">
+        `room`
+    </sql>
+
+    <sql id="cols_exclude_id">
+        `user_id`, `name`, `intro`, `max_number`, `create_time`
+    </sql>
+
+    <sql id="values_exclude_id">
+        #{user_id}, #{name}, #{intro}, #{max_number}, now()
+    </sql>
+
+    <insert id="createRoom" parameterType="Room" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tb"/>
+        (<include refid="cols_exclude_id"/>)
+        VALUES
+        <include refid="values_exclude_id"/>
+    </insert>
+
+</mapper>

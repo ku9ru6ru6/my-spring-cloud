@@ -1,0 +1,40 @@
+# 服务端口
+server:
+  port: 9001
+  context-path: /
+  session:
+    timeout: 60
+# eureka 注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9000/eureka/
+
+# spring 配置
+spring:
+  session:
+    store-type: redis
+    redis:
+      namespace: chat-session
+  output:
+    ansi:
+      enabled: detect
+  datasource:
+    url: jdbc:mysql://localhost:3306/chat?characterEncoding=utf8mb4&useSSL=true
+    username:
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    tomcat:
+      initial-size: 1
+      max-active: 3
+  application:
+    name: service-provide
+
+# 日志级别
+logging:
+  level: warn
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: me.cai.model

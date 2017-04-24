@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.cai.model.User">
+
+    <resultMap id="UserMap" type="User">
+        <id column="id" property="id" javaType="java.lang.Long"/>
+        <result column="name" property="name" javaType="java.lang.String"/>
+        <result column="password" property="password" javaType="java.lang.String"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date"/>
+    </resultMap>
+
+    <sql id="tb">
+        `user`
+    </sql>
+
+    <sql id="cols_exclude_id">
+        `name`, `password`, `create_time`
+    </sql>
+
+    <sql id="cols_exclude_time">
+        `id`, `name`, `password`
+    </sql>
+
+    <sql id="values_exclude_id">
+        #{name}, #{password}, now()
+    </sql>
+
+    <insert id="createUser" parameterType="User" keyColumn="id" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="tb"/>
+        (<include refid="cols_exclude_id"/>)
+        VALUES
+        (<include refid="values_exclude_id"/>)
+    </insert>
+
+    <select id="checkName" parameterType="map" resultType="java.lang.Integer">
+        SELECT 1
+        FROM
+        <include refid="tb"/>
+        WHERE `name` = #{name}
+    </select>
+    
+    <select id="findByName" parameterType="map" resultMap="UserMap">
+        SELECT
+        <include refid="cols_exclude_time"/>
+        FROM
+        <include refid="tb"/>
+        WHERE `name` = #{name}
+    </select>
+
+</mapper>

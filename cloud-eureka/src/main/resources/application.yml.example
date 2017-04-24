@@ -1,0 +1,28 @@
+# 服务端口
+server:
+  port: 9000
+  context-path: /
+  session:
+    timeout: 60
+
+# eureka 服务配置
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka/
+
+# spring-session 配置
+spring:
+  session:
+    store-type: redis
+    redis:
+      namespace: chat-session
+  output:
+    ansi:
+      enabled: detect
+
+# 日志配置
+logging:
+  level.*: warn
