@@ -7,6 +7,7 @@
     <resultMap id="UserMap" type="User">
         <id column="id" property="id" javaType="java.lang.Long"/>
         <result column="name" property="name" javaType="java.lang.String"/>
+        <result column="room_number" property="roomNumber" javaType="java.lang.Integer"/>
         <result column="password" property="password" javaType="java.lang.String"/>
         <result column="create_time" property="createTime" javaType="java.util.Date"/>
     </resultMap>
@@ -16,15 +17,15 @@
     </sql>
 
     <sql id="cols_exclude_id">
-        `name`, `password`, `create_time`
+        `name`, `roomNumber`, `password`, `create_time`
     </sql>
 
     <sql id="cols_exclude_time">
-        `id`, `name`, `password`
+        `id`, `name`, `room_number`, `password`
     </sql>
 
     <sql id="values_exclude_id">
-        #{name}, #{password}, now()
+        #{name}, `roomNumber`, #{password}, now()
     </sql>
 
     <insert id="createUser" parameterType="User" keyColumn="id" useGeneratedKeys="true" keyProperty="id">

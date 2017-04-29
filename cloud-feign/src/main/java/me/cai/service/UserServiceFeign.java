@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Mail: caiguangzheng@terminus.io
  * TODO:
  */
-@FeignClient(value = "service-provide", fallback = UserFallBackFeign.class)
+@FeignClient(serviceId = "service-provide", fallback = UserFallBackFeign.class)
 public interface UserServiceFeign {
 
     @RequestMapping(value ="/service/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -26,10 +26,10 @@ public interface UserServiceFeign {
     @RequestMapping(value = "/service/user/checkName/{name}", method = RequestMethod.GET)
     Integer checkName(@PathVariable("name") String name);
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/service/user/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     User login(@RequestBody User loginUser);
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    @RequestMapping(value = "/service/user/hello", method = RequestMethod.GET)
     String hello();
 
 }
