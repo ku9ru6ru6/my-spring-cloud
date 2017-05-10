@@ -41,6 +41,7 @@
         FROM
         <include refid="tb"/>
         WHERE `name` = #{name}
+        LIMIT 1
     </select>
     
     <select id="findByName" parameterType="map" resultMap="UserMap">

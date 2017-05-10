@@ -1,6 +1,9 @@
 package me.cai.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import me.cai.exception.JsonResponseException;
 import me.cai.model.User;
+import me.cai.response.MyResponse;
 import me.cai.service.UserServiceFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
+@Slf4j
 @RequestMapping("/api/user")
 public class FeignController {
 
@@ -28,13 +32,22 @@ public class FeignController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Long createUser(@RequestBody User user) {
-        Long id = userServiceFeign.createUser(user);
-        return id;
+        MyResponse<Long> result = userServiceFeign.createUser(user);
+        if (!result.isSuccess()) {
+            log.error("FeignController createUser fail, error:{}", result.getError());
+            throw new JsonResponseException(result.getCode(), result.getError());
+        }
+        return result.getResult();
     }
 
     @GetMapping("/hello")
     public String hello() {
-        return userServiceFeign.hello();
+        MyResponse<String> result = userServiceFeign.hello();
+        if (!result.isSuccess()) {
+            log.error("FeignController hello fail, error:{}", result.getError());
+            throw new JsonResponseException(result.getCode(), result.getError());
+        }
+        return result.getResult();
     }
 
 }

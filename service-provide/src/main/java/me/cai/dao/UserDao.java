@@ -32,7 +32,7 @@ public class UserDao {
         return sqlSession.insert(sqlId("createUser"), user) > 0;
     }
 
-    public Integer checkName(String name) {
+    public Boolean checkName(String name) {
         return sqlSession.selectOne(sqlId("checkName"), ImmutableMap.of("name", name));
     }
 

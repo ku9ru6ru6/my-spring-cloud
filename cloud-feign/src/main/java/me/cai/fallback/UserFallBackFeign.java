@@ -1,10 +1,9 @@
 package me.cai.fallback;
 
 import me.cai.model.User;
+import me.cai.response.MyResponse;
 import me.cai.service.UserServiceFeign;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * me.cai.fallback
@@ -18,23 +17,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserFallBackFeign implements UserServiceFeign {
 
     @Override
-    public Long createUser(User user) {
-        return null;
+    public MyResponse<Long> createUser(User user) {
+        return MyResponse.fail("UserFallBackFeign.call.createUser.fail");
     }
 
     @Override
-    public Integer checkName(String name) {
-        return null;
+    public MyResponse<Boolean> checkName(String name) {
+        return MyResponse.fail("UserFallBackFeign.call.checkName.fail");
     }
 
     @Override
-    public User login(User loginUser) {
-        return null;
+    public MyResponse<User> login(User loginUser) {
+        return MyResponse.fail("UserFallBackFeign.call.login.fail");
     }
 
     @Override
-    public String hello() {
-        return "hello error";
+    public MyResponse<String> hello() {
+        return MyResponse.fail("UserFallBackFeign.call.hello.hello");
     }
 
 }

@@ -1,12 +1,16 @@
 package me.cai.service;
 
+import com.google.common.base.Throwables;
+import lombok.extern.slf4j.Slf4j;
 import me.cai.dao.UserDao;
 import me.cai.model.User;
+import me.cai.response.MyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -21,12 +25,13 @@ import java.util.Objects;
  */
 
 @RestController
+@Slf4j
 @RequestMapping("/service/user")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl {
 
     private MessageDigest md5;
 
-    @Autowired
+    @Resource
     private UserDao userDao;
 
     @PostConstruct
@@ -38,35 +43,47 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Long createUser(@RequestBody User user) {
-        user.setPassword(encryption(user.getPassword()));
-        userDao.createUser(user);
-        return user.getId();
-    }
-
-    @Override
-    @GetMapping("/checkName/{name}")
-    public Integer checkName(@PathVariable("name") String name) {
-        return userDao.checkName(name);
-    }
-
-    @Override
-    @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public User login(@RequestBody User loginUser) {
-        User dbUser = userDao.findByName(loginUser.getName());
-        if (Objects.equals(dbUser.getPassword(), encryption(loginUser.getPassword()))) {
-            return dbUser;
-        } else {
-            return null;
+    public MyResponse<Long> createUser(@RequestBody User user) {
+        try {
+            user.setPassword(encryption(user.getPassword()));
+            userDao.createUser(user);
+            return MyResponse.ok(user.getId());
+        } catch (Exception e) {
+            log.error("UserServiceImpl createUser fail, error:{}", Throwables.getStackTraceAsString(e));
+            return MyResponse.fail("创建用户失败");
         }
     }
 
-    @Override
+    @GetMapping("/checkName/{name}")
+    public MyResponse<Boolean> checkName(@PathVariable("name") String name) {
+        try {
+            Boolean result = userDao.checkName(name);
+            return MyResponse.ok(result);
+        } catch (Exception e) {
+            log.error("UserServiceImpl checkName fail, error:{}", Throwables.getStackTraceAsString(e));
+            return MyResponse.fail("检查用户名唯一性失败");
+        }
+    }
+
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public MyResponse<User> login(@RequestBody User loginUser) {
+        try {
+            User dbUser = userDao.findByName(loginUser.getName());
+            if (Objects.equals(dbUser.getPassword(), encryption(loginUser.getPassword()))) {
+                return MyResponse.ok(dbUser);
+            } else {
+                return MyResponse.fail("密码错误");
+            }
+        } catch (Exception e) {
+            log.error("UserServiceImpl login fail, error:{}", Throwables.getStackTraceAsString(e));
+            return MyResponse.fail("登录验证服务出错");
+        }
+    }
+
     @GetMapping("/hello")
-    public String hello() {
-        return "hello";
+    public MyResponse<String> hello() {
+        return MyResponse.fail("Hello 服务出错");
     }
 
     /**

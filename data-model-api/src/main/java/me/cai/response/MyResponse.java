@@ -13,7 +13,7 @@ import java.io.Serializable;
  * TODO:
  */
 @Data
-public class MyResponse <T> implements Serializable {
+public class MyResponse<T> implements Serializable {
 
     private boolean isSuccess;
 
@@ -21,19 +21,27 @@ public class MyResponse <T> implements Serializable {
 
     private String error;
 
+    private Integer code;
+
     private MyResponse() {}
 
-    public static <T> MyResponse ok(T result) {
+    public static <T> MyResponse<T> ok(T result) {
         MyResponse<T> response = new MyResponse<>();
         response.setResult(result);
         response.setSuccess(true);
+        response.setCode(200);
         return response;
     }
 
-    public static MyResponse fail(String error) {
-        MyResponse response = new MyResponse<>();
+    public static <T> MyResponse<T> fail(String error) {
+        return fail(error, 500);
+    }
+
+    public static <T> MyResponse<T> fail(String error, Integer code) {
+        MyResponse<T> response = new MyResponse<>();
         response.setError(error);
         response.setSuccess(false);
+        response.setCode(code);
         return response;
     }
 }
