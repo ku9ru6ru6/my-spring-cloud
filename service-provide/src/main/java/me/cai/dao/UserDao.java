@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
+
 /**
  * me.cai.dao
  *
@@ -17,15 +19,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDao {
 
-    private final SqlSession sqlSession;
+    @Resource
+    private SqlSession sqlSession;
 
     private final String sqlId(String methodName) {
         return "me.cai.model.User." + methodName;
-    }
-
-    @Autowired
-    public UserDao(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
     }
 
     public Boolean createUser(User user) {

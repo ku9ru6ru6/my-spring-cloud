@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequestMapping("/api/user")
-public class FeignController {
+public class UserFeignController {
 
     private final UserServiceFeign userServiceFeign;
 
     @Autowired
-    public FeignController(UserServiceFeign userServiceFeign) {
+    public UserFeignController(UserServiceFeign userServiceFeign) {
         this.userServiceFeign = userServiceFeign;
     }
 
@@ -34,18 +34,38 @@ public class FeignController {
     public Long createUser(@RequestBody User user) {
         MyResponse<Long> result = userServiceFeign.createUser(user);
         if (!result.isSuccess()) {
-            log.error("FeignController createUser fail, error:{}", result.getError());
-            throw new JsonResponseException(result.getCode(), result.getError());
+            log.error("UserFeignController createUser fail, error:{}", result.getError());
+            throw new JsonResponseException(result.getError());
         }
         return result.getResult();
     }
 
-    @GetMapping("/hello")
+    @PostMapping("/checkName")
+    public Boolean checkName(@RequestParam("name") String name) {
+        MyResponse<Boolean> result = userServiceFeign.checkName(name);
+        if (!result.isSuccess()) {
+            log.error("UserFeignController checkName fail, error:{}", result.getError());
+            throw new JsonResponseException(result.getError());
+        }
+        return result.getResult();
+    }
+
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public User login(@RequestBody User loginUser) {
+        MyResponse<User> result = userServiceFeign.login(loginUser);
+        if (!result.isSuccess()) {
+            log.error("UserFeignController login fail, error:{}", result.getError());
+            throw new JsonResponseException(result.getError());
+        }
+        return result.getResult();
+    }
+
+    @PostMapping("/hello")
     public String hello() {
         MyResponse<String> result = userServiceFeign.hello();
         if (!result.isSuccess()) {
             log.error("FeignController hello fail, error:{}", result.getError());
-            throw new JsonResponseException(result.getCode(), result.getError());
+            throw new JsonResponseException(result.getError());
         }
         return result.getResult();
     }

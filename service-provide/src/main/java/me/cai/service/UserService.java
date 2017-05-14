@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -27,7 +29,7 @@ import java.util.Objects;
 @RestController
 @Slf4j
 @RequestMapping("/service/user")
-public class UserServiceImpl {
+public class UserService {
 
     private MessageDigest md5;
 
@@ -50,18 +52,18 @@ public class UserServiceImpl {
             userDao.createUser(user);
             return MyResponse.ok(user.getId());
         } catch (Exception e) {
-            log.error("UserServiceImpl createUser fail, error:{}", Throwables.getStackTraceAsString(e));
+            log.error("UserService createUser fail, error:{}", Throwables.getStackTraceAsString(e));
             return MyResponse.fail("创建用户失败");
         }
     }
 
-    @GetMapping("/checkName/{name}")
-    public MyResponse<Boolean> checkName(@PathVariable("name") String name) {
+    @PostMapping("/checkName")
+    public MyResponse<Boolean> checkName(@RequestParam("name") String name) {
         try {
             Boolean result = userDao.checkName(name);
             return MyResponse.ok(result);
         } catch (Exception e) {
-            log.error("UserServiceImpl checkName fail, error:{}", Throwables.getStackTraceAsString(e));
+            log.error("UserService checkName fail, error:{}", Throwables.getStackTraceAsString(e));
             return MyResponse.fail("检查用户名唯一性失败");
         }
     }
@@ -76,13 +78,13 @@ public class UserServiceImpl {
                 return MyResponse.fail("密码错误");
             }
         } catch (Exception e) {
-            log.error("UserServiceImpl login fail, error:{}", Throwables.getStackTraceAsString(e));
+            log.error("UserService login fail, error:{}", Throwables.getStackTraceAsString(e));
             return MyResponse.fail("登录验证服务出错");
         }
     }
 
     @GetMapping("/hello")
-    public MyResponse<String> hello() {
+    public MyResponse<String> hello() throws IOException {
         return MyResponse.fail("Hello 服务出错");
     }
 

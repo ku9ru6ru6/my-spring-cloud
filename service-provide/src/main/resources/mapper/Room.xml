@@ -21,16 +21,49 @@
         `user_id`, `name`, `intro`, `max_number`, `create_time`
     </sql>
 
+    <sql id="all_cols">
+        `id`,
+        <include refid="cols_exclude_id"/>
+    </sql>
+
     <sql id="values_exclude_id">
         #{user_id}, #{name}, #{intro}, #{max_number}, now()
     </sql>
 
-    <insert id="createRoom" parameterType="Room" keyProperty="id" useGeneratedKeys="true">
+    <insert id="createRoom" parameterType="Room" keyColumn="id" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
         <include refid="tb"/>
         (<include refid="cols_exclude_id"/>)
         VALUES
         <include refid="values_exclude_id"/>
     </insert>
+
+    <select id="checkName" parameterType="string" resultType="java.lang.Integer">
+        SELECT 1
+        FROM
+        <include refid="tb"/>
+        WHERE `name` = #{name}
+        LIMIT 1
+    </select>
+
+    <select id="count" parameterType="string" resultType="java.lang.Long">
+        SELECT count(1)
+        FROM
+        <include refid="tb"/>
+        <where>
+            <if test="name != null">AND `name` LIKE '${name}%'</if>
+        </where>
+    </select>
+
+    <select id="paging" parameterType="map" resultMap="RoomMap">
+        SELECT
+        <include refid="all_cols"/>
+        FROM
+        <include refid="tb"/>
+        <where>
+            <if test="name != null">AND `name` LIKE '${name}%'</if>
+        </where>
+        ORDER BY `id` DESC LIMIT #{offset}, #{limit}
+    </select>
 
 </mapper>

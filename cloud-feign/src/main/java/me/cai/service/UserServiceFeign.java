@@ -5,10 +5,10 @@ import me.cai.model.User;
 import me.cai.response.MyResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * me.cai.service
@@ -24,8 +24,8 @@ public interface UserServiceFeign {
     @RequestMapping(value ="/service/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     MyResponse<Long> createUser(@RequestBody User user);
 
-    @RequestMapping(value = "/service/user/checkName/{name}", method = RequestMethod.GET)
-    MyResponse<Boolean> checkName(@PathVariable("name") String name);
+    @RequestMapping(value = "/service/user/checkName", method = RequestMethod.POST)
+    MyResponse<Boolean> checkName(@RequestParam("name") String name);
 
     @RequestMapping(value = "/service/user/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     MyResponse<User> login(@RequestBody User loginUser);
