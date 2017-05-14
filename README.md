@@ -35,6 +35,7 @@
 -- --
 ## 用户相关API
 ### 请求的跟地址 localhost:9003/feign-server/api/user
+其项目时需要启动Redis
 -- --
 ### 创建用户 URL: 无 | Method: POST  
 请求参数 User对象:
