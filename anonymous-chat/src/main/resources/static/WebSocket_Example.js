@@ -32,7 +32,7 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
+function send() {
     stompClient.send("/app/message", {}, JSON.stringify({'name': $("#name").val()}));
 }
 
@@ -46,6 +46,6 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $( "#send" ).click(function() { send(); });
 });
 

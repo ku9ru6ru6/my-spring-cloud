@@ -1,9 +1,7 @@
 package me.cai.dao;
 
-import com.google.common.collect.ImmutableMap;
 import me.cai.model.User;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;

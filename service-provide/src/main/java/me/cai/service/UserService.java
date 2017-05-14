@@ -5,13 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import me.cai.dao.UserDao;
 import me.cai.model.User;
 import me.cai.response.MyResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
