@@ -11,6 +11,7 @@
 ```
 -- --
 ## 导入依赖
+### 使用jquery和bootstrap就可以了吧
 ```html
     <!-- 导入本地依赖 -->
     <link href="/main.css" rel="stylesheet">
