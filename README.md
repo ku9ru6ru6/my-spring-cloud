@@ -10,8 +10,19 @@
 }
 ```
 -- --
+## 导入依赖
+```html
+    <!-- 导入本地依赖 -->
+    <link href="/main.css" rel="stylesheet">
+    <script src="/app.js"></script>
+    <!-- 导入外部依赖 -->
+    <link href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/3.2.0/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+```
 ## 页面样式
-### [登录页样式](http://drrr.com/)
+### 登录页面: 一个登录框里有账号,密码两个输入框,下面有一个登录按钮和一个注册按钮
 ### 主页: 一个分页插件，可以根据房间名前缀匹配，还有一个创建房间的按钮
 ### 聊天页面：一个消息框，一个发送框。消息气泡带有用户名和消息发送日期
 ``` json
