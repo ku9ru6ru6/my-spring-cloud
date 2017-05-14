@@ -24,9 +24,6 @@ public interface UserServiceFeign {
     @RequestMapping(value ="/service/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     MyResponse<Long> createUser(@RequestBody User user);
 
-    @RequestMapping(value = "/service/user/checkName", method = RequestMethod.POST)
-    MyResponse<Boolean> checkName(@RequestParam("name") String name);
-
     @RequestMapping(value = "/service/user/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     MyResponse<User> login(@RequestBody User loginUser);
 

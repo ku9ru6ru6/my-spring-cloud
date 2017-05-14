@@ -48,23 +48,17 @@ public class UserService {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public MyResponse<Long> createUser(@RequestBody User user) {
         try {
-            user.setPassword(encryption(user.getPassword()));
-            userDao.createUser(user);
-            return MyResponse.ok(user.getId());
+            Integer result = userDao.checkName(user.getName());
+            if (Objects.isNull(result)) {
+                user.setPassword(encryption(user.getPassword()));
+                userDao.createUser(user);
+                return MyResponse.ok(user.getId());
+            } else {
+                return MyResponse.fail("该用户名已存在");
+            }
         } catch (Exception e) {
             log.error("UserService createUser fail, error:{}", Throwables.getStackTraceAsString(e));
             return MyResponse.fail("创建用户失败");
-        }
-    }
-
-    @PostMapping("/checkName")
-    public MyResponse<Boolean> checkName(@RequestParam("name") String name) {
-        try {
-            Boolean result = userDao.checkName(name);
-            return MyResponse.ok(result);
-        } catch (Exception e) {
-            log.error("UserService checkName fail, error:{}", Throwables.getStackTraceAsString(e));
-            return MyResponse.fail("检查用户名唯一性失败");
         }
     }
 
@@ -72,6 +66,9 @@ public class UserService {
     public MyResponse<User> login(@RequestBody User loginUser) {
         try {
             User dbUser = userDao.findByName(loginUser.getName());
+            if (Objects.isNull(dbUser)) {
+                return MyResponse.fail("用户名不存在");
+            }
             if (Objects.equals(dbUser.getPassword(), encryption(loginUser.getPassword()))) {
                 return MyResponse.ok(dbUser);
             } else {

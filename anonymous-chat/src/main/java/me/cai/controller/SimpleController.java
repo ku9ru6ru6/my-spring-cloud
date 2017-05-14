@@ -20,14 +20,7 @@ import java.util.Date;
 @Controller
 public class SimpleController {
 
-    @MessageMapping("/greetings")
-    @SendTo("/topic/greetings")
-    public String handle(@Payload User message) {
-        System.out.println(message);
-        return "[ " + new Date() + " ] :" + message;
-    }
-
-    @MessageMapping("/hello")
+    @MessageMapping("/message")
     @SendTo("/topic/greetings")
     public User getName(@Payload User user) {
         System.out.println(user);

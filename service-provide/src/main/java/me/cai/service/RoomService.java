@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * me.cai.service
@@ -44,8 +45,8 @@ public class RoomService {
     @PostMapping("/checkName")
     public MyResponse<Boolean> checkName(@RequestParam("name") String name) {
         try {
-            Boolean result = roomDao.checkName(name);
-            return MyResponse.ok(result);
+            Integer result = roomDao.checkName(name);
+            return MyResponse.ok(Objects.isNull(result));
         } catch (Exception e) {
             log.error("RoomService checkName fail, error:{}", Throwables.getStackTraceAsString(e));
             return MyResponse.fail("检查房间名唯一性失败");

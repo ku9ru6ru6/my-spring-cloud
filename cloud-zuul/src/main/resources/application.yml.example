@@ -14,12 +14,8 @@ eureka:
 
 zuul:
   routes:
-    chat-server:
-      path: /chat-server/**
-      serviceId: chat-server
-      sensitiveHeaders:
     feign-server:
       path: /feign-server/**
       serviceId: feign-server
-      sensitiveHeaders:
+  sensitive-headers:
 

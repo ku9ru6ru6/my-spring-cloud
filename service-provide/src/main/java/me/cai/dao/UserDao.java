@@ -30,11 +30,11 @@ public class UserDao {
         return sqlSession.insert(sqlId("createUser"), user) > 0;
     }
 
-    public Boolean checkName(String name) {
-        return sqlSession.selectOne(sqlId("checkName"), ImmutableMap.of("name", name));
+    public Integer checkName(String name) {
+        return sqlSession.selectOne(sqlId("checkName"), name);
     }
 
     public User findByName(String name) {
-        return sqlSession.selectOne(sqlId("findByName"), ImmutableMap.of("name", name));
+        return sqlSession.selectOne(sqlId("findByName"), name);
     }
 }

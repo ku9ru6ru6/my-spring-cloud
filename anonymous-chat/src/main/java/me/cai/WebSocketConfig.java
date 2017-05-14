@@ -64,7 +64,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry messageBrokerRegistry) {
 
 //        这个前缀不需要与web项目名相同，可以自己随意指定
-        messageBrokerRegistry.setApplicationDestinationPrefixes("/message");
+        messageBrokerRegistry.setApplicationDestinationPrefixes("/app");
 
 //        这里配置了两个前缀，若是destination以这两个前缀开头，则会转发给该Broker
         messageBrokerRegistry.enableSimpleBroker("/topic");

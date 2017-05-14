@@ -30,7 +30,7 @@ public class RoomDao {
         return sqlSession.insert(sqlId("createRoom"), room) > 0;
     }
 
-    public Boolean checkName(String name) {
+    public Integer checkName(String name) {
         return sqlSession.selectOne(sqlId("checkName"), name);
     }
 

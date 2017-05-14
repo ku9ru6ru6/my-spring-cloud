@@ -20,9 +20,9 @@ spring:
     ansi:
       enabled: detect
   datasource:
-    url: jdbc:mysql://localhost:3306/chat?characterEncoding=utf8mb4&useSSL=true
-    username:
-    password:
+    url: jdbc:mysql://localhost:3306/chat?useSSL=true&autoReconnect=true
+    username: root
+    password: cgz966
     driver-class-name: com.mysql.jdbc.Driver
     type: org.apache.tomcat.jdbc.pool.DataSource
     tomcat:

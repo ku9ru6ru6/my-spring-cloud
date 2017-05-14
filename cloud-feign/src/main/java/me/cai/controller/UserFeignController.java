@@ -40,16 +40,6 @@ public class UserFeignController {
         return result.getResult();
     }
 
-    @PostMapping("/checkName")
-    public Boolean checkName(@RequestParam("name") String name) {
-        MyResponse<Boolean> result = userServiceFeign.checkName(name);
-        if (!result.isSuccess()) {
-            log.error("UserFeignController checkName fail, error:{}", result.getError());
-            throw new JsonResponseException(result.getError());
-        }
-        return result.getResult();
-    }
-
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public User login(@RequestBody User loginUser) {
         MyResponse<User> result = userServiceFeign.login(loginUser);

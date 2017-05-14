@@ -22,11 +22,6 @@ public class UserFallBackFeign implements UserServiceFeign {
     }
 
     @Override
-    public MyResponse<Boolean> checkName(String name) {
-        return MyResponse.fail("调用UserService的checkName服务失败");
-    }
-
-    @Override
     public MyResponse<User> login(User loginUser) {
         return MyResponse.fail("调用UserService的login服务失败");
     }
