@@ -42,4 +42,21 @@ public class Message implements Serializable {
      * 消息创建时间
      */
     private Date createTime;
+
+    private String userName;
+
+    private String roomName;
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", roomId=" + roomId +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                ", userName='" + userName + '\'' +
+                ", roomName='" + roomName + '\'' +
+                '}';
+    }
 }

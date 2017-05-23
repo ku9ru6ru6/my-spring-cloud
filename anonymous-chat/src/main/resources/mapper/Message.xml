@@ -21,7 +21,29 @@
     </sql>
 
     <sql id="values_exclude_id">
-        #{user_id}, #{room_id}, #{content}, now()
+        #{userId}, #{roomId}, #{content}, now()
     </sql>
 
+    <insert id="createMessage" parameterType="Message" keyColumn="id" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="tb"/>
+        (<include refid="cols_exclude_id"/>)
+        VALUES
+        (<include refid="values_exclude_id"/>)
+    </insert>
+
+    <select id="initMessage" parameterType="int" resultMap="MessageMap">
+        SELECT *
+        FROM
+        <include refid="tb"/>
+        WHERE `room_id` = #{roomId}
+        ORDER BY `id` DESC
+        LIMIT 0, 5
+    </select>
+
+    <select id="findUserName" parameterType="long" resultType="String">
+        SELECT `name`
+        FROM `user`
+        WHERE `id` = #{userId}
+    </select>
 </mapper>

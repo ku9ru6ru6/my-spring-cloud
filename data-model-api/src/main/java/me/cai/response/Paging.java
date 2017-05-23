@@ -1,6 +1,7 @@
 package me.cai.response;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import java.util.Objects;
  * TODO:
  */
 @Data
+@NoArgsConstructor
 public class Paging<T> {
 
     private Long total;

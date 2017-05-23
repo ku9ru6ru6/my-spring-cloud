@@ -52,7 +52,7 @@ public class RoomFeignController {
 
     @GetMapping("/paging")
     public Paging<Room> paging(@RequestParam(value = "name", required = false) String name,
-                               @RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer limit,
+                               @RequestParam(value = "pageSize", defaultValue = "4", required = false) Integer limit,
                                @RequestParam(value = "pageNo", defaultValue = "0", required = false) Integer offset) {
         MyResponse<Paging<Room>> result = roomServiceFeign.paging(name, limit, offset);
         if (!result.isSuccess()) {

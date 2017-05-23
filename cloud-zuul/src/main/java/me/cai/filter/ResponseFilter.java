@@ -45,16 +45,21 @@ public class ResponseFilter extends ZuulFilter {
     @Override
     public Object run() {
         HttpServletResponse response = RequestContext.getCurrentContext().getResponse();
-        response.setContentType("text/html;charset=UTF-8");
         InputStream in = RequestContext.getCurrentContext().getResponseDataStream();
+        String json = null;
         try {
-            String json = CharStreams.toString(new InputStreamReader(in, "UTF-8"));
+            json = CharStreams.toString(new InputStreamReader(in, "UTF-8"));
             JsonResponseExceptionView view = objectMapper.readValue(json, new TypeReference<JsonResponseExceptionView>() {});
             if (!Objects.equals(view.getStatus(), 200)) {
                 response.sendError(view.getStatus(), view.getMessage());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().print(json);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
         return null;
     }

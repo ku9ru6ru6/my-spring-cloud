@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>聊天室</title>
+    <link rel="shortcut icon" href="favicon.png">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <script src="/webjars/jquery/3.2.0/jquery.min.js"></script>
+</head>
+
+<body>
+<div class="chatbox">
+    <div class="chat_top fn-clear">
+        <div class="logo"><img src="images/logo.png" width="190" height="60" alt=""/></div>
+
+    </div>
+    <div class="chat_message fn-clear">
+        <form>
+            <div class="login-input-box">
+                <div class="login-username">
+                    <input id="name" type="text" placeholder="请输入您的昵称" name="name" required=required>
+                </div>
+                <div class="login-username login-password">
+                    <input id="password" type="password" placeholder="请输入您的密码" required=required>
+                </div>
+                <div class="login-btn-box">
+                    <button type="button" class="login-btn" id="login">登录</button>
+                </div>
+                <div class="login-btn-box">
+                    <button type="button" class="register-btn" id="register">注册</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script type="text/javascript">
+    $("#register").click(function () {
+        if ($("#name").val() == "" || $("#password").val() == "") {
+            $("#name").val("");
+            $("#password").val("");
+            alert("账号或密码不能为空!");
+        } else {
+            var jsonData = "{\"name\" : \"" + $("#name").val() + "\",\"password\" : \"" + $("#password").val() + "\"}";
+            console.log(jsonData);
+            $.ajax({
+                url: "http://localhost:9003/feign-server/api/user",
+                type: "POST",
+                data: jsonData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    sessionStorage.setItem("user", JSON.stringify(data));
+                    location.href = "list.html";
+                },
+                error: function (data) {
+                    console.log(data.responseJSON);
+                    $("#name").val("");
+                    $("#password").val("");
+                    alert(data.responseJSON.message);
+                }
+            });
+        }
+    });
+
+    $("#login").click(function () {
+        if ($("#name").val() == "" || $("#password").val() == "") {
+            $("#name").val("");
+            $("#password").val("");
+            alert("账号或密码不能为空!");
+        } else {
+            var jsonData = "{\"name\" : \"" + $("#name").val() + "\",\"password\" : \"" + $("#password").val() + "\"}";
+            console.log(jsonData);
+            $.ajax({
+                url: "http://localhost:9003/feign-server/api/user/login",
+                type: "POST",
+                data: jsonData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                    sessionStorage.setItem("user", JSON.stringify(data));
+                    location.href = "list.html";
+                },
+                error: function (data) {
+                    console.log(data.responseJSON);
+                    $("#name").val("");
+                    $("#password").val("");
+                    alert(data.responseJSON.message);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

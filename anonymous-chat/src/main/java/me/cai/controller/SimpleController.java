@@ -1,13 +1,22 @@
 package me.cai.controller;
 
-import me.cai.model.User;
+import me.cai.model.Message;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * me.cai.controller
@@ -20,17 +29,43 @@ import java.util.Date;
 @Controller
 public class SimpleController {
 
-    @MessageMapping("/message")
-    @SendTo("/topic/greetings")
-    public User getName(@Payload User user) {
-        System.out.println(user);
-        user.setName("hello " + user.getName());
-        return user;
+    @Resource
+    private SimpMessagingTemplate template;
+
+    @Resource
+    protected SqlSession sqlSession;
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+    private final String sqlId(String methodName) {
+        return "me.cai.model.Message." + methodName;
     }
 
-    @SubscribeMapping("/init")
-    public String init() {
-        return "init";
+    @PreDestroy
+    public void destroy() {
+        executorService.shutdown();
     }
+
+    @MessageMapping("/message")
+    public void getName(@Payload Message message) {
+        System.out.println(message);
+        message.setCreateTime(new Date());
+        String payload = "/topic/" + message.getRoomName();
+        template.convertAndSend(payload, message);
+        executorService.execute(() -> sqlSession.insert(sqlId("createMessage"), message));
+    }
+
+    @RequestMapping("/initMessage")
+    @ResponseBody
+    public List<Message> initMessage(@RequestParam int roomId) {
+        List<Message> messages = sqlSession.selectList(sqlId("initMessage"), roomId);
+        messages.forEach(message -> {
+            String userName = sqlSession.selectOne(sqlId("findUserName"), message.getUserId());
+            message.setUserName(userName);
+        });
+        Collections.reverse(messages);
+        return messages;
+    }
+
 
 }

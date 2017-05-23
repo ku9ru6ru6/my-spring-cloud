@@ -80,7 +80,7 @@ public class UserService {
 
     @GetMapping("/hello")
     public MyResponse<String> hello() throws IOException {
-        return MyResponse.fail("Hello 服务出错");
+        return MyResponse.ok("Hello");
     }
 
     /**

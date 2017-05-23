@@ -3,5 +3,24 @@ server:
 spring:
   application:
     name: chat-server
+  session:
+    store-type: redis
+    redis:
+      namespace: chat-session
+  output:
+    ansi:
+      enabled: detect
+  datasource:
+    url: jdbc:mysql://localhost:3306/chat?useSSL=true&autoReconnect=true
+    username: root
+    password: cgz966
+    driver-class-name: com.mysql.jdbc.Driver
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    tomcat:
+      initial-size: 1
+      max-active: 3
 logging:
   level: warn
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: me.cai.model

@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室</title>
+    <link rel="shortcut icon" href="favicon.png">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <script src="/webjars/jquery/3.2.0/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+</head>
+
+<body>
+<div class="chatbox">
+    <div class="chat_top fn-clear">
+        <div class="logo"><img src="images/logo.png" width="190" height="60" alt=""/></div>
+        <div class="uinfo fn-clear" id="userInfo"></div>
+    </div>
+    <div class="chat_message fn-clear">
+        <div class="message_box" id="message_box">
+
+            <!--<div class="msg_item fn-clear">-->
+                <!--<div class="uface"><img src="images/53f44283a4347.jpg" width="40" height="40" alt=""/></div>-->
+                <!--<div class="item_right">-->
+                    <!--<div class="msg">11111</div>-->
+                    <!--<div class="name_time">猫猫 · 3分钟前</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        </div>
+        <div class="write_box">
+            <textarea id="message" name="message" class="write_area" placeholder="说点啥吧..."></textarea>
+            <div class="facebox fn-clear">
+                <div class="expression"></div>
+                <div class="chat_type" id="chat_type">群聊</div>
+                <button name="" class="sub_but">提 交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $('#message_box').scrollTop($("#message_box")[0].scrollHeight + 20);
+        $('.uname').hover(
+            function () {
+                $('.managerbox').stop(true, true).slideDown(100);
+            },
+            function () {
+                $('.managerbox').stop(true, true).slideUp(100);
+            }
+        );
+
+        var user = JSON.parse(sessionStorage.getItem("user"));
+        var room = JSON.parse(sessionStorage.getItem("room"));
+
+        initMessage(room.roomId);
+
+        var userHtml = '<div class="uface">' +
+            '<div class="normal user-avatar" style="background-color: rgb(179, 137, 121);">' +
+            '<div class="avatar-text">' + user.name.substr(0, 1) + '</div> </div> </div> <div class="uname">' + user.name;
+        $("#userInfo").append(userHtml);
+
+        var socket = new SockJS('/portfolio');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function () {
+            stompClient.subscribe('/topic/' + room.roomName, function (msg) {
+                showMessage(JSON.parse(msg.body));
+            });
+        });
+
+
+        $('.sub_but').click(function () {
+            sendMessage();
+        });
+
+        /*按下按钮或键盘按键*/
+        $("#message").keydown(function (event) {
+            var e = window.event || event;
+            var k = e.keyCode || e.which || e.charCode;
+            //按下ctrl+enter发送消息
+            if ((event.ctrlKey && (k == 13 || k == 10) )) {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            var msg = $("#message").val();
+            stompClient.send("/app/message", {}, JSON.stringify({
+                'userName': user.name,
+                'userId': user.id,
+                'roomName': room.roomName,
+                'roomId': room.roomId,
+                'content': msg
+            }));
+        }
+
+        function showMessage(msg) {
+            var htmlData = '<div class="msg_item fn-clear">'
+                + '<div class="uface">'
+                + ' <div class="normal user-avatar" style="background-color: rgb(179, 137, 121);">'
+                + ' <div class="avatar-text">' + msg.userName.substr(0, 1) + '</div> </div>'
+                + '</div>'
+                + '   <div class="item_right">'
+                + '     <div class="msg own">' + msg.content + '</div>'
+                + '     <div class="name_time">' + msg.userName + ' · ' + formatDate(msg.createTime) + '</div>'
+                + '   </div>'
+                + '</div>';
+            $("#message_box").append(htmlData);
+            $('#message_box').scrollTop($("#message_box")[0].scrollHeight + 20);
+            $("#message").val('');
+        }
+
+        function formatDate(now) {
+            var now = new Date(now);
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var date = now.getDate();
+            var hour = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            return year + "-" + fixZero(month, 2) + "-" + fixZero(date, 2) + " " + fixZero(hour, 2) + ":" + fixZero(minute, 2) + ":" + fixZero(second, 2);
+        }
+
+        function fixZero(num, length) {
+            var str = "" + num;
+            var len = str.length;
+            var s = "";
+            for (var i = length; i-- > len;) {
+                s += "0";
+            }
+            return s + str;
+        }
+
+        function initMessage(roomId) {
+            $.ajax({
+                url: "/initMessage?roomId=" + roomId,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $.each(data, function (i, msg) {
+                        showMessage(msg);
+                    });
+                },
+                error: function (data) {
+                    console.log(data.responseJSON);
+                    alert(data.responseJSON.message);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
