@@ -27,7 +27,7 @@
     </sql>
 
     <sql id="values_exclude_id">
-        #{user_id}, #{name}, #{intro}, #{max_number}, now()
+        #{userId}, #{name}, #{intro}, #{maxNumber}, now()
     </sql>
 
     <insert id="createRoom" parameterType="Room" keyColumn="id" useGeneratedKeys="true" keyProperty="id">

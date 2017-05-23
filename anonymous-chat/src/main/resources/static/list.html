@@ -5,18 +5,20 @@
     <title>聊天室</title>
     <link rel="shortcut icon" href="favicon.png">
     <link rel="icon" href="favicon.png" type="image/x-icon">
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
     <link type="text/css" rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/css.css"/>
     <link rel="stylesheet" type="text/css" href="css/simplePagination.css"/>
-    <script src="/webjars/jquery/3.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/dialog.css">
+    <script src="js/dialog-plus.js"></script>
 </head>
 
 <body>
 <div class="chatbox">
     <div class="chat_top fn-clear">
         <div class="logo"><img src="images/logo.png" width="190" height="60" alt=""/></div>
-        <div id="roomButton" style="display: inline-block;position: absolute;right: 10%;top: 20px;height: 20px;cursor:pointer;">
-            <button>创建房间</button>
+        <div style="display: inline-block;position: absolute;right: 10%;top: 20px;height: 20px;cursor:pointer;">
+            <button id="roomButton">创建房间</button>
         </div>
         <div class="uinfo fn-clear" id="userInfo"></div>
     </div>
@@ -40,10 +42,11 @@
 
 </div>
 <script type="text/javascript">
+
     var end = false;
 
     var user = JSON.parse(sessionStorage.getItem("user"));
-    console.log(user.name);
+    console.log(user);
     var userHtml = '<div class="uface">' +
         '<div class="normal user-avatar" style="background-color: rgb(179, 137, 121);">' +
         '<div class="avatar-text">' + user.name.substr(0, 1) + '</div> </div> </div> <div class="uname">' + user.name;
@@ -55,10 +58,6 @@
         var num = 0;
 
         $("#content").scroll(function () {
-
-//            console.log(this.scrollHeight - $(this).scrollTop());
-//            console.log($(this).height());
-
             if ((this.scrollHeight - $(this).scrollTop()) == $(this).height()) {
                 num++;
                 paging(num);
@@ -66,7 +65,47 @@
         });
 
         $("#roomButton").click(function () {
-
+            $("#intro").val('');
+            var roomDialog = dialog({
+                width: 460,
+                height: 250,
+                title: '创建房间',
+                content: '<input id="name" placeholder="请输入房间名" style="width: 438px;margin-bottom: 20px;"/>'
+                + '<textarea id="intro" placeholder="请输入房间简介(可选)" style="width: 438px; height: 194px;resize: none;">',
+                okValue: '提交',
+                ok: function () {
+                    var that = this;
+                    this.title('正在提交..');
+                    setTimeout(function () {
+                        alert('提交超时');
+                        that.close().remove();
+                    }, 2000);
+                    $.ajax({
+                        url: "http://localhost:9003/feign-server/api/room",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify({
+                            'name': $("#name").val(),
+                            'intro': $("#intro").val(),
+                            'userId': user.id,
+                            'maxNumber': 10
+                        }),
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function (data) {
+                            console.log(data.responseJSON);
+                            alert(data.responseJSON.message);
+                            location.reload();
+                        }
+                    });
+                    return false;
+                },
+                cancelValue: '取消',
+                cancel: function () {return true;}
+            });
+            roomDialog.showModal();
         });
     });
 
