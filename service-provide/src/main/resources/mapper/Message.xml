@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.cai.model.Message">
+
+    <resultMap id="MessageMap" type="Message">
+        <id column="id" property="id" javaType="java.lang.Long"/>
+        <result column="user_id" property="userId" javaType="java.lang.Long"/>
+        <result column="room_id" property="roomId" javaType="java.lang.Long"/>
+        <result column="content" property="content" javaType="java.lang.String"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date"/>
+    </resultMap>
+
+    <sql id="tb">
+        `message`
+    </sql>
+
+    <sql id="cols_exclude_id">
+        `user_id`, `room_id`, `content`, `create_time`
+    </sql>
+
+    <sql id="values_exclude_id">
+        #{userId}, #{roomId}, #{content}, now()
+    </sql>
+
+    <insert id="createMessage" parameterType="Message" keyColumn="id" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="tb"/>
+        (<include refid="cols_exclude_id"/>)
+        VALUES
+        (<include refid="values_exclude_id"/>)
+    </insert>
+
+    <select id="initMessage" parameterType="long" resultMap="MessageMap">
+        SELECT *
+        FROM
+        <include refid="tb"/>
+        WHERE `room_id` = #{roomId}
+        ORDER BY `id` DESC
+        LIMIT 0, 5
+    </select>
+
+    <select id="findUserName" parameterType="long" resultType="String">
+        SELECT `name`
+        FROM `user`
+        WHERE `id` = #{userId}
+    </select>
+</mapper>

@@ -32,14 +32,12 @@ public class UserFeignController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public User createUser(@RequestBody User user) {
-        MyResponse<Long> result = userServiceFeign.createUser(user);
+        MyResponse<User> result = userServiceFeign.createUser(user);
         if (!result.isSuccess()) {
             log.error("UserFeignController createUser fail, error:{}", result.getError());
             throw new JsonResponseException(result.getError());
         }
-        User response = new User();
-        response.setId(result.getResult());
-        return response;
+        return result.getResult();
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)

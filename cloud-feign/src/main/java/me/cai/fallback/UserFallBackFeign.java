@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class UserFallBackFeign implements UserServiceFeign {
 
     @Override
-    public MyResponse<Long> createUser(User user) {
+    public MyResponse<User> createUser(User user) {
         return MyResponse.fail("调用UserService的createUser服务失败");
     }
 

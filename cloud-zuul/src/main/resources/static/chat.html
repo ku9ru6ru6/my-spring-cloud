@@ -64,7 +64,7 @@
         var socket = new SockJS('http://localhost:9004/portfolio/');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function () {
-            stompClient.subscribe('http://localhost:9004/topic/' + room.roomId, function (msg) {
+            stompClient.subscribe('/topic/' + room.roomId, function (msg) {
                 showMessage(JSON.parse(msg.body));
             });
         });
@@ -86,7 +86,7 @@
 
         function sendMessage() {
             var msg = $("#message").val();
-            stompClient.send("http://localhost:9004/app/message", {}, JSON.stringify({
+            stompClient.send("/app/message", {}, JSON.stringify({
                 'userName': user.name,
                 'userId': user.id,
                 'roomName': room.roomName,
@@ -134,7 +134,7 @@
 
         function initMessage(roomId) {
             $.ajax({
-                url: "http://localhost:9004/initMessage?roomId=" + roomId,
+                url: "/feign-server/api/message/initMessage?roomId=" + roomId,
                 type: "GET",
                 dataType: "json",
                 success: function (data) {

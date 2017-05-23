@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserServiceFeign {
 
     @RequestMapping(value ="/service/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    MyResponse<Long> createUser(@RequestBody User user);
+    MyResponse<User> createUser(@RequestBody User user);
 
     @RequestMapping(value = "/service/user/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     MyResponse<User> login(@RequestBody User loginUser);

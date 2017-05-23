@@ -44,13 +44,13 @@ public class UserService {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public MyResponse<Long> createUser(@RequestBody User user) {
+    public MyResponse<User> createUser(@RequestBody User user) {
         try {
             Integer result = userDao.checkName(user.getName());
             if (Objects.isNull(result)) {
                 user.setPassword(encryption(user.getPassword()));
                 userDao.createUser(user);
-                return MyResponse.ok(user.getId());
+                return MyResponse.ok(user);
             } else {
                 return MyResponse.fail("该用户名已存在");
             }
