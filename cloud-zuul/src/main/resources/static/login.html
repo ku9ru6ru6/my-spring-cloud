@@ -45,7 +45,7 @@
             var jsonData = "{\"name\" : \"" + $("#name").val() + "\",\"password\" : \"" + $("#password").val() + "\"}";
             console.log(jsonData);
             $.ajax({
-                url: "http://localhost:9003/feign-server/api/user",
+                url: "/feign-server/api/user",
                 type: "POST",
                 data: jsonData,
                 contentType: "application/json; charset=utf-8",
@@ -74,7 +74,7 @@
             var jsonData = "{\"name\" : \"" + $("#name").val() + "\",\"password\" : \"" + $("#password").val() + "\"}";
             console.log(jsonData);
             $.ajax({
-                url: "http://localhost:9003/feign-server/api/user/login",
+                url: "/feign-server/api/user/login",
                 type: "POST",
                 data: jsonData,
                 contentType: "application/json; charset=utf-8",

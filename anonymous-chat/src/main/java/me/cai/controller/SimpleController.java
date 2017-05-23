@@ -50,7 +50,7 @@ public class SimpleController {
     public void getName(@Payload Message message) {
         System.out.println(message);
         message.setCreateTime(new Date());
-        String payload = "/topic/" + message.getRoomName();
+        String payload = "/topic/" + message.getRoomId();
         template.convertAndSend(payload, message);
         executorService.execute(() -> sqlSession.insert(sqlId("createMessage"), message));
     }

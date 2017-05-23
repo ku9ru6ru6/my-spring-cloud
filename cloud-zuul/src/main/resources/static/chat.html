@@ -61,10 +61,10 @@
             '<div class="avatar-text">' + user.name.substr(0, 1) + '</div> </div> </div> <div class="uname">' + user.name;
         $("#userInfo").append(userHtml);
 
-        var socket = new SockJS('/portfolio');
+        var socket = new SockJS('http://localhost:9004/portfolio/');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function () {
-            stompClient.subscribe('/topic/' + room.roomName, function (msg) {
+            stompClient.subscribe('http://localhost:9004/topic/' + room.roomId, function (msg) {
                 showMessage(JSON.parse(msg.body));
             });
         });
@@ -86,7 +86,7 @@
 
         function sendMessage() {
             var msg = $("#message").val();
-            stompClient.send("/app/message", {}, JSON.stringify({
+            stompClient.send("http://localhost:9004/app/message", {}, JSON.stringify({
                 'userName': user.name,
                 'userId': user.id,
                 'roomName': room.roomName,
@@ -134,7 +134,7 @@
 
         function initMessage(roomId) {
             $.ajax({
-                url: "/initMessage?roomId=" + roomId,
+                url: "http://localhost:9004/initMessage?roomId=" + roomId,
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
